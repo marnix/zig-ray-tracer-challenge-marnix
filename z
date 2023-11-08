@@ -1,0 +1,9 @@
+#!/usr/bin/bash -xe
+
+# This is my 'continuous build' script,
+# running in a separate window while I'm developing.
+
+while sleep 0.1
+do
+  ls src/*.zig | entr -d zig test src/tuple.zig
+done
