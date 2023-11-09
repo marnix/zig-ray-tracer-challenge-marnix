@@ -7,11 +7,6 @@ pub const Float = f32;
 const Tuple = struct {
     v: @Vector(4, Float),
 
-    /// Create a Tuple, from a 4-argument vector
-    pub fn of(vector: @Vector(4, Float)) Tuple {
-        return .{ .v = vector };
-    }
-
     pub fn x(self: Tuple) Float {
         return self.v[0];
     }
@@ -33,6 +28,10 @@ const Tuple = struct {
     }
 };
 
+pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
+    return .{ .v = .{ x, y, z, w } };
+}
+
 // // // // // // // // // // // // //
 // The following is only for testing
 
@@ -44,7 +43,7 @@ fn expectEqF(expected: anytype, actual: anytype) !void {
 }
 
 test "A tuple with w=1.0 is a point" {
-    const a = Tuple.of(.{ 4.3, -4.2, 3.1, 1.0 });
+    const a = tuple(4.3, -4.2, 3.1, 1.0);
     try expectEqF(4.3, a.x());
     try expectEqF(-4.2, a.y());
     try expectEqF(3.1, a.z());
@@ -54,7 +53,7 @@ test "A tuple with w=1.0 is a point" {
 }
 
 test "A tuple with w=0.0 is a vector" {
-    const a = Tuple.of(.{ 4.3, -4.2, 3.1, 0.0 });
+    const a = tuple(4.3, -4.2, 3.1, 0.0);
     try expectEqF(4.3, a.x());
     try expectEqF(-4.2, a.y());
     try expectEqF(3.1, a.z());
