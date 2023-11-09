@@ -1,3 +1,5 @@
+[![Build with Zig 0.11.0](https://github.com/marnix/zig-ray-tracer-challenge-marnix/workflows/Build%20with%20zig%200.11.x/badge.svg?branch=main)](https://github.com/marnix/zig-ray-tracer-challenge-marnix/actions?query=branch%3Amain)
+
 Today, November 8, 2023, "The Ray Tracer Challenge --
 A Test-Driven Guide to Your First 3D Renderer"
 arrived in the mail.
