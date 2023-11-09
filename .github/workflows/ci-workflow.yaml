@@ -1,0 +1,20 @@
+name: Build with zig 0.11.x
+
+on:
+  push:
+  pull_request:
+  #schedule:
+  #  - cron: '23 3 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.11.0
+      - run: zig build test --verbose
+      - run: zig fmt --check .

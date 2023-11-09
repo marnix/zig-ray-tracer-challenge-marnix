@@ -1,0 +1,15 @@
+#!/usr/bin/bash -xe
+
+# This is my 'continuous build' script,
+# running in a separate window while I'm developing.
+# This uses the 'z' script.
+
+if [ -f /etc/wsl.conf ]
+then
+	echo 'WARNING: does not work on WSL/WSL2...'
+fi
+
+while sleep 1
+do
+  ls build.zig src/*.zig | entr -d -s "$VALIDATION_COMMAND"
+done
