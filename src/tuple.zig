@@ -20,6 +20,10 @@ const Tuple = struct {
         return self.v[3];
     }
 
+    pub fn equals(self: Tuple, they: Tuple) bool {
+        return self.x() == they.x() and self.y() == they.y() and self.z() == they.z() and self.w() == they.w();
+    }
+
     pub fn isPoint(self: Tuple) bool {
         return self.w() == 1.0;
     }
@@ -30,6 +34,14 @@ const Tuple = struct {
 
 pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
     return .{ .v = .{ x, y, z, w } };
+}
+
+pub fn point(x: Float, y: Float, z: Float) Tuple {
+    return tuple(x, y, z, 1);
+}
+
+pub fn vector(x: Float, y: Float, z: Float) Tuple {
+    return tuple(x, y, z, 0);
 }
 
 // // // // // // // // // // // // //
@@ -60,4 +72,14 @@ test "A tuple with w=0.0 is a vector" {
     try expectEqF(0.0, a.w());
     try expect(!a.isPoint());
     try expect(a.isVector());
+}
+
+test "point() creates tuples with w=1" {
+    const p = point(4, -4, 3);
+    try expect(p.equals(tuple(4, -4, 3, 1)));
+}
+
+test "vector() creates tuples with w=0" {
+    const p = vector(4, -4, 3);
+    try expect(p.equals(tuple(4, -4, 3, 0)));
 }
