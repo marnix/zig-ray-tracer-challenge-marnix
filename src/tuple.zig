@@ -73,6 +73,10 @@ pub fn minus(self: Tuple) Tuple {
     return self.negate();
 }
 
+pub fn normalize(self: Tuple) Tuple {
+    return self.div(self.magnitude());
+}
+
 // // // // // // // // // // // // //
 // The following is only for testing
 
@@ -81,6 +85,13 @@ const expect = std.testing.expect;
 // Later: Move this to a central test support .zig file
 fn expectEqF(expected: anytype, actual: anytype) !void {
     try std.testing.expectApproxEqAbs(@as(f64, expected), @as(f64, actual), 1e-6);
+}
+
+fn expectEqT(expected: Tuple, actual: Tuple) !void {
+    try expectEqF(expected.x(), actual.x());
+    try expectEqF(expected.y(), actual.y());
+    try expectEqF(expected.z(), actual.z());
+    try expectEqF(expected.w(), actual.w());
 }
 
 test "A tuple with w=1.0 is a point" {
@@ -180,4 +191,9 @@ test "Computing the magnitude of vector(1, 2, 3)" {
 test "Computing the magnitude of vector(-1, -2, -3)" {
     const v = vector(1, 2, 3);
     try expectEqF(v.magnitude(), sqrt(14));
+}
+
+test "Normalizing vector(4, 0, 0) gives (1, 0, 0)" {
+    const v = vector(4, 0, 0);
+    try expectEqT(vector(1, 0, 0), normalize(v));
 }
