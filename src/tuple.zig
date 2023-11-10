@@ -81,6 +81,14 @@ pub fn dot(self: Tuple, they: Tuple) Float {
     return self.x() * they.x() + self.y() * they.y() + self.z() * they.z() + self.w() * they.w();
 }
 
+pub fn cross(self: Tuple, they: Tuple) Tuple {
+    return vector(
+        self.y() * they.z() - self.z() * they.y(),
+        self.z() * they.x() - self.x() * they.z(),
+        self.x() * they.y() - self.y() * they.x(),
+    );
+}
+
 // // // // // // // // // // // // //
 // The following is only for testing
 
@@ -212,4 +220,11 @@ test "The dot product of two tuples" {
     const a = vector(1, 2, 3);
     const b = vector(2, 3, 4);
     try expectEqF(20, dot(a, b));
+}
+
+test "The cross product of two tuples" {
+    const a = vector(1, 2, 3);
+    const b = vector(2, 3, 4);
+    try expectEqT(vector(-1, 2, -1), cross(a, b));
+    try expectEqT(vector(1, -2, 1), cross(b, a));
 }
