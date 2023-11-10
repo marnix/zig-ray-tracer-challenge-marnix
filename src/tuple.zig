@@ -43,6 +43,9 @@ const Tuple = struct {
     pub fn times(self: Tuple, f: Float) Tuple {
         return .{ .v = .{ f * self.x(), f * self.y(), f * self.z(), f * self.w() } };
     }
+    pub fn div(self: Tuple, f: Float) Tuple {
+        return self.times(1 / f);
+    }
 };
 
 pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
@@ -138,4 +141,9 @@ test "Multiplying a tuple by a scalar" {
 test "Multiplying a tuple by a fraction" {
     const a = tuple(1, -2, 3, -4);
     try expect(a.times(0.5).equals(tuple(0.5, -1, 1.5, -2)));
+}
+
+test "Dividing a tuple by a scalar" {
+    const a = tuple(1, -2, 3, -4);
+    try expect(a.div(2).equals(tuple(0.5, -1, 1.5, -2)));
 }
