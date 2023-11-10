@@ -161,3 +161,23 @@ test "Computing the magnitude of vector(1, 0, 0)" {
     const v = vector(1, 0, 0);
     try expect(v.magnitude() == 1);
 }
+
+test "Computing the magnitude of vector(0, 1, 0)" {
+    const v = vector(0, 1, 0);
+    try expect(v.magnitude() == 1);
+}
+
+test "Computing the magnitude of vector(0, 0, 1)" {
+    const v = vector(0, 0, 1);
+    try expect(v.magnitude() == 1);
+}
+
+test "Computing the magnitude of vector(1, 2, 3)" {
+    const v = vector(1, 2, 3);
+    try expectEqF(v.magnitude(), sqrt(14));
+}
+
+test "Computing the magnitude of vector(-1, -2, -3)" {
+    const v = vector(1, 2, 3);
+    try expectEqF(v.magnitude(), sqrt(14));
+}
