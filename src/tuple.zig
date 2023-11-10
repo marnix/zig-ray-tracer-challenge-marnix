@@ -3,6 +3,10 @@ const std = @import("std");
 /// This is the basic floating-point type that we will use everywhere.
 pub const Float = f32;
 
+inline fn sqrt(f: Float) Float {
+    return @sqrt(f);
+}
+
 /// This is intended to be used as an immutable type.
 const Tuple = struct {
     v: @Vector(4, Float),
@@ -49,7 +53,7 @@ const Tuple = struct {
 
     pub fn magnitude(self: Tuple) Float {
         std.debug.assert(self.isVector());
-        return @sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
+        return sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
     }
 };
 
