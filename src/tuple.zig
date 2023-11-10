@@ -30,6 +30,16 @@ const Tuple = struct {
     pub fn isVector(self: Tuple) bool {
         return self.w() == 0.0;
     }
+
+    pub fn plus(self: Tuple, they: Tuple) Tuple {
+        return .{ .v = .{ self.x() + they.x(), self.y() + they.y(), self.z() + they.z(), self.w() + they.w() } };
+    }
+    pub fn minus(self: Tuple, they: Tuple) Tuple {
+        return .{ .v = .{ self.x() - they.x(), self.y() - they.y(), self.z() - they.z(), self.w() - they.w() } };
+    }
+    pub fn negate(self: Tuple) Tuple {
+        return .{ .v = .{ -self.x(), -self.y(), -self.z(), -self.w() } };
+    }
 };
 
 pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
@@ -42,6 +52,10 @@ pub fn point(x: Float, y: Float, z: Float) Tuple {
 
 pub fn vector(x: Float, y: Float, z: Float) Tuple {
     return tuple(x, y, z, 0);
+}
+
+pub fn minus(self: Tuple) Tuple {
+    return self.negate();
 }
 
 // // // // // // // // // // // // //
@@ -82,4 +96,33 @@ test "point() creates tuples with w=1" {
 test "vector() creates tuples with w=0" {
     const p = vector(4, -4, 3);
     try expect(p.equals(tuple(4, -4, 3, 0)));
+}
+
+test "Adding two tuples" {
+    const a1 = tuple(3, -2, 5, 1);
+    const a2 = tuple(-2, 3, 1, 0);
+    try expect(a1.plus(a2).equals(tuple(1, 1, 6, 1)));
+}
+
+test "Subtracting a vector from a point" {
+    const p = point(3, 2, 1);
+    const v = vector(5, 6, 7);
+    try expect(p.minus(v).equals(point(-2, -4, -6)));
+}
+
+test "Subtracting two vectors" {
+    const v1 = vector(3, 2, 1);
+    const v2 = vector(5, 6, 7);
+    try expect(v1.minus(v2).equals(vector(-2, -4, -6)));
+}
+
+test "Subtracting a vector from the zero vector" {
+    const zero = vector(0, 0, 0);
+    const v = vector(1, -2, 3);
+    try expect(zero.minus(v).equals(vector(-1, 2, -3)));
+}
+
+test "Negating a tuple" {
+    const a = tuple(1, -2, 3, -4);
+    try expect(minus(a).equals(tuple(-1, 2, -3, 4)));
 }
