@@ -197,3 +197,9 @@ test "Normalizing vector(4, 0, 0) gives (1, 0, 0)" {
     const v = vector(4, 0, 0);
     try expectEqT(vector(1, 0, 0), normalize(v));
 }
+
+test "Normalizing vector(1, 2, 3)" {
+    const v = vector(1, 2, 3);
+    const norm = normalize(v);
+    try expectEqF(1, magnitude(norm));
+}
