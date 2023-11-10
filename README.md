@@ -17,3 +17,7 @@ but I plan to upgrade to newer Zig stable releases.
 
 I'm not yet sure how closely I will follow the book,
 and how many of the 'Putting It Together' projects I will do, if any.
+
+----
+
+`zig build --help` shows `zig build run-...` examples to run.
