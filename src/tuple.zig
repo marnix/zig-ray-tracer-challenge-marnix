@@ -46,6 +46,11 @@ const Tuple = struct {
     pub fn div(self: Tuple, f: Float) Tuple {
         return self.times(1 / f);
     }
+
+    pub fn magnitude(self: Tuple) Float {
+        std.debug.assert(self.isVector());
+        return @sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
+    }
 };
 
 pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
@@ -146,4 +151,9 @@ test "Multiplying a tuple by a fraction" {
 test "Dividing a tuple by a scalar" {
     const a = tuple(1, -2, 3, -4);
     try expect(a.div(2).equals(tuple(0.5, -1, 1.5, -2)));
+}
+
+test "Computing the magnitude of vector(1, 0, 0)" {
+    const v = vector(1, 0, 0);
+    try expect(v.magnitude() == 1);
 }
