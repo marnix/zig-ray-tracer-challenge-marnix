@@ -50,11 +50,6 @@ const Tuple = struct {
     pub fn div(self: Tuple, f: Float) Tuple {
         return self.times(1 / f);
     }
-
-    pub fn magnitude(self: Tuple) Float {
-        std.debug.assert(self.isVector());
-        return sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
-    }
 };
 
 pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
@@ -74,7 +69,12 @@ pub fn minus(self: Tuple) Tuple {
 }
 
 pub fn normalize(self: Tuple) Tuple {
-    return self.div(self.magnitude());
+    return self.div(magnitude(self));
+}
+
+pub fn magnitude(self: Tuple) Float {
+    std.debug.assert(self.isVector());
+    return sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
 }
 
 // // // // // // // // // // // // //
@@ -170,27 +170,27 @@ test "Dividing a tuple by a scalar" {
 
 test "Computing the magnitude of vector(1, 0, 0)" {
     const v = vector(1, 0, 0);
-    try expectEqF(1, v.magnitude());
+    try expectEqF(1, magnitude(v));
 }
 
 test "Computing the magnitude of vector(0, 1, 0)" {
     const v = vector(0, 1, 0);
-    try expectEqF(1, v.magnitude());
+    try expectEqF(1, magnitude(v));
 }
 
 test "Computing the magnitude of vector(0, 0, 1)" {
     const v = vector(0, 0, 1);
-    try expectEqF(1, v.magnitude());
+    try expectEqF(1, magnitude(v));
 }
 
 test "Computing the magnitude of vector(1, 2, 3)" {
     const v = vector(1, 2, 3);
-    try expectEqF(sqrt(14), v.magnitude());
+    try expectEqF(sqrt(14), magnitude(v));
 }
 
 test "Computing the magnitude of vector(-1, -2, -3)" {
     const v = vector(1, 2, 3);
-    try expectEqF(sqrt(14), v.magnitude());
+    try expectEqF(sqrt(14), magnitude(v));
 }
 
 test "Normalizing vector(4, 0, 0) gives (1, 0, 0)" {
