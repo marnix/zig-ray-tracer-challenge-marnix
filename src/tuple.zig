@@ -40,6 +40,9 @@ const Tuple = struct {
     pub fn negate(self: Tuple) Tuple {
         return .{ .v = .{ -self.x(), -self.y(), -self.z(), -self.w() } };
     }
+    pub fn times(self: Tuple, f: Float) Tuple {
+        return .{ .v = .{ f * self.x(), f * self.y(), f * self.z(), f * self.w() } };
+    }
 };
 
 pub fn tuple(x: Float, y: Float, z: Float, w: Float) Tuple {
@@ -125,4 +128,14 @@ test "Subtracting a vector from the zero vector" {
 test "Negating a tuple" {
     const a = tuple(1, -2, 3, -4);
     try expect(minus(a).equals(tuple(-1, 2, -3, 4)));
+}
+
+test "Multiplying a tuple by a scalar" {
+    const a = tuple(1, -2, 3, -4);
+    try expect(a.times(3.5).equals(tuple(3.5, -7, 10.5, -14)));
+}
+
+test "Multiplying a tuple by a fraction" {
+    const a = tuple(1, -2, 3, -4);
+    try expect(a.times(0.5).equals(tuple(0.5, -1, 1.5, -2)));
 }
