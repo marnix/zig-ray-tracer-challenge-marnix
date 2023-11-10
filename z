@@ -2,4 +2,4 @@
 
 # A shortcut, to build / run all tests during development
 
-zig build test
+zig build install test

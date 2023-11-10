@@ -8,7 +8,7 @@ inline fn sqrt(f: Float) Float {
 }
 
 /// This is intended to be used as an immutable type.
-const Tuple = struct {
+pub const Tuple = struct {
     v: @Vector(4, Float),
 
     pub fn x(self: Tuple) Float {
