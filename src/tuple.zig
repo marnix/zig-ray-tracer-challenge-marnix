@@ -35,10 +35,10 @@ const Tuple = struct {
         return .{ .v = .{ self.x() + they.x(), self.y() + they.y(), self.z() + they.z(), self.w() + they.w() } };
     }
     pub fn minus(self: Tuple, they: Tuple) Tuple {
-        return .{ .v = .{ self.x() - they.x(), self.y() - they.y(), self.z() - they.z(), self.w() - they.w() } };
+        return self.plus(they.negate());
     }
     pub fn negate(self: Tuple) Tuple {
-        return .{ .v = .{ -self.x(), -self.y(), -self.z(), -self.w() } };
+        return self.times(-1);
     }
     pub fn times(self: Tuple, f: Float) Tuple {
         return .{ .v = .{ f * self.x(), f * self.y(), f * self.z(), f * self.w() } };
