@@ -77,6 +77,10 @@ pub fn magnitude(self: Tuple) Float {
     return sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
 }
 
+pub fn dot(self: Tuple, they: Tuple) Float {
+    return self.x() * they.x() + self.y() * they.y() + self.z() * they.z() + self.w() * they.w();
+}
+
 // // // // // // // // // // // // //
 // The following is only for testing
 
@@ -202,4 +206,10 @@ test "Normalizing vector(1, 2, 3)" {
     const v = vector(1, 2, 3);
     const norm = normalize(v);
     try expectEqF(1, magnitude(norm));
+}
+
+test "The dot product of two tuples" {
+    const a = vector(1, 2, 3);
+    const b = vector(2, 3, 4);
+    try expectEqF(20, dot(a, b));
 }
