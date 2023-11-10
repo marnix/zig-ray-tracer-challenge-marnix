@@ -1,3 +1,3 @@
 comptime {
-    _ = @import("tuple.zig");
+    _ = @import("tuples.zig");
 }
