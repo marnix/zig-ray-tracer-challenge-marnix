@@ -3,6 +3,10 @@ const std = @import("std");
 /// This is the basic floating-point type that we will use everywhere.
 pub const Float = f32;
 
+inline fn sqrt(f: Float) Float {
+    return @sqrt(f);
+}
+
 /// This is intended to be used as an immutable type.
 const Tuple = struct {
     v: @Vector(4, Float),
@@ -49,7 +53,7 @@ const Tuple = struct {
 
     pub fn magnitude(self: Tuple) Float {
         std.debug.assert(self.isVector());
-        return @sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
+        return sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
     }
 };
 
@@ -156,4 +160,24 @@ test "Dividing a tuple by a scalar" {
 test "Computing the magnitude of vector(1, 0, 0)" {
     const v = vector(1, 0, 0);
     try expect(v.magnitude() == 1);
+}
+
+test "Computing the magnitude of vector(0, 1, 0)" {
+    const v = vector(0, 1, 0);
+    try expect(v.magnitude() == 1);
+}
+
+test "Computing the magnitude of vector(0, 0, 1)" {
+    const v = vector(0, 0, 1);
+    try expect(v.magnitude() == 1);
+}
+
+test "Computing the magnitude of vector(1, 2, 3)" {
+    const v = vector(1, 2, 3);
+    try expectEqF(v.magnitude(), sqrt(14));
+}
+
+test "Computing the magnitude of vector(-1, -2, -3)" {
+    const v = vector(1, 2, 3);
+    try expectEqF(v.magnitude(), sqrt(14));
 }
