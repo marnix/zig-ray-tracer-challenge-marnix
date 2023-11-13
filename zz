@@ -11,5 +11,5 @@ fi
 
 while sleep 1
 do
-  ls build.zig src/*.zig | entr -d -s ./z
+  ls build.zig src/*.zig | (entr -d -s ./z || echo 'Ignoring non-zero entr exit code')
 done
