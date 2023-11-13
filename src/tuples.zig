@@ -1,11 +1,8 @@
 const std = @import("std");
 
-/// This is the basic floating-point type that we will use everywhere.
-pub const Float = f32;
-
-inline fn sqrt(f: Float) Float {
-    return @sqrt(f);
-}
+const types = @import("types.zig");
+const Float = types.Float;
+const sqrt = types.sqrt;
 
 /// This is intended to be used as an immutable type.
 pub const Tuple = struct {
@@ -92,12 +89,9 @@ pub fn cross(self: Tuple, they: Tuple) Tuple {
 // // // // // // // // // // // // //
 // The following is only for testing
 
-const expect = std.testing.expect;
-
-// Later: Move this to a central test support .zig file
-fn expectEqF(expected: anytype, actual: anytype) !void {
-    try std.testing.expectApproxEqAbs(@as(f64, expected), @as(f64, actual), 1e-6);
-}
+const testing = @import("testing.zig");
+const expect = testing.expect;
+const expectEqF = testing.expectEqF;
 
 fn expectEqT(expected: Tuple, actual: Tuple) !void {
     try expectEqF(expected.x(), actual.x());
