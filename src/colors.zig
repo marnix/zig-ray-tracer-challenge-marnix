@@ -1,7 +1,7 @@
 const types = @import("types.zig");
 const Float = types.Float;
 
-const Color = struct {
+pub const Color = struct {
     red: Float,
     green: Float,
     blue: Float,
@@ -40,7 +40,7 @@ const Color = struct {
     }
 };
 
-fn color(r: Float, g: Float, b: Float) Color {
+pub fn color(r: Float, g: Float, b: Float) Color {
     return .{ .red = r, .green = g, .blue = b };
 }
 
