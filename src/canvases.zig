@@ -34,9 +34,12 @@ const Canvas = struct {
     }
 
     pub fn to_ppm(self: Canvas, writer: anytype) !void {
+        // the format
         _ = try writer.writeAll("P3\n");
+        // the size
         try writer.print("{d} {d}\n", .{ self._width, self._height });
-        _ = try writer.writeAll("255\n");
+        const maxPixelValue = floatToValue(1);
+        try writer.print("{d}\n", .{maxPixelValue});
 
         for (0..self._height) |y| {
             var separator: []const u8 = "";
