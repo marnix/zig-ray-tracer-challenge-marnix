@@ -45,11 +45,11 @@ const Canvas = struct {
             var separator: []const u8 = "";
             for (0..self._width) |x| {
                 const c = self.pixel_at(x, y);
-                try writer.print(
-                    "{s}{d} {d} {d}",
-                    .{ separator, floatToValue(c.red), floatToValue(c.green), floatToValue(c.blue) },
-                );
-                separator = " ";
+                for ([_]colors.Float{ c.red, c.green, c.blue }) |f| {
+                    const n = floatToValue(f);
+                    try writer.print("{s}{d}", .{ separator, n });
+                    separator = " ";
+                }
             }
             try writer.writeAll("\n");
         }
@@ -141,8 +141,8 @@ test "Constructing the PPM pixel data" {
     c.write_pixel(4, 2, c3);
     var ppm = ArrayList(u8).init(testing.allocator);
     defer ppm.deinit();
-
     try c.to_ppm(ppm.writer());
+
     try expectEqualStrings(
         \\255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
         \\0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
