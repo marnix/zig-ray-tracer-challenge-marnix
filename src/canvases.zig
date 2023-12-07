@@ -189,3 +189,13 @@ test "Splitting long lines in PPM files" {
         \\153 255 204 153 255 204 153 255 204 153 255 204 153
     , stringLines(ppm.items, 4, 7));
 }
+
+test "PPM files are terminated by a newline character" {
+    const c = try canvas(5, 3, &testing.allocator);
+    defer c.deinit();
+    var ppm = ArrayList(u8).init(testing.allocator);
+    defer ppm.deinit();
+    try c.to_ppm(ppm.writer());
+
+    try expectEqual('\n', ppm.items[ppm.items.len - 1]);
+}
