@@ -42,12 +42,23 @@ const Canvas = struct {
         try writer.print("{d}\n", .{maxPixelValue});
 
         for (0..self._height) |y| {
+            var lineLength: usize = 0;
             var separator: []const u8 = "";
             for (0..self._width) |x| {
                 const c = self.pixel_at(x, y);
                 for ([_]colors.Float{ c.red, c.green, c.blue }) |f| {
                     const n = floatToValue(f);
+
+                    // insert a newline if the writer.print() below would go beyond 70 characters
+                    const numberLength = stringLengthInBase10Of(n);
+                    if (lineLength + separator.len + numberLength > 70) {
+                        try writer.writeAll("\n");
+                        lineLength = 0;
+                        separator = "";
+                    }
+
                     try writer.print("{s}{d}", .{ separator, n });
+                    lineLength += separator.len + numberLength;
                     separator = " ";
                 }
             }
@@ -57,6 +68,15 @@ const Canvas = struct {
 
     fn floatToValue(f: colors.Float) u8 {
         return Color.asInt(u8, 255, f);
+    }
+
+    fn stringLengthInBase10Of(n: usize) usize {
+        if (n == 0) {
+            return 1;
+        } else {
+            const log10n = @log10(@as(f16, @floatFromInt(n)));
+            return 1 + @as(usize, @intFromFloat(@trunc(log10n)));
+        }
     }
 };
 
@@ -148,4 +168,24 @@ test "Constructing the PPM pixel data" {
         \\0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
         \\0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
     , stringLines(ppm.items, 4, 6));
+}
+
+test "Splitting long lines in PPM files" {
+    const c = try canvas(10, 2, &testing.allocator);
+    defer c.deinit();
+    for (0..c._width) |x| {
+        for (0..c._height) |y| {
+            c.write_pixel(x, y, color(1, 0.8, 0.6));
+        }
+    }
+    var ppm = ArrayList(u8).init(testing.allocator);
+    defer ppm.deinit();
+    try c.to_ppm(ppm.writer());
+
+    try expectEqualStrings(
+        \\255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+        \\153 255 204 153 255 204 153 255 204 153 255 204 153
+        \\255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
+        \\153 255 204 153 255 204 153 255 204 153 255 204 153
+    , stringLines(ppm.items, 4, 7));
 }
