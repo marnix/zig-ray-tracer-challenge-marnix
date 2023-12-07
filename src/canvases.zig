@@ -37,6 +37,23 @@ const Canvas = struct {
         _ = try writer.writeAll("P3\n");
         try writer.print("{d} {d}\n", .{ self._width, self._height });
         _ = try writer.writeAll("255\n");
+
+        for (0..self._height) |y| {
+            var separator: []const u8 = "";
+            for (0..self._width) |x| {
+                const c = self.pixel_at(x, y);
+                try writer.print(
+                    "{s}{d} {d} {d}",
+                    .{ separator, floatToValue(c.red), floatToValue(c.green), floatToValue(c.blue) },
+                );
+                separator = " ";
+            }
+            try writer.writeAll("\n");
+        }
+    }
+
+    fn floatToValue(f: colors.Float) u8 {
+        return Color.asInt(u8, 255, f);
     }
 };
 
@@ -107,4 +124,25 @@ test "Constructing the PPM header" {
         \\5 3
         \\255
     , stringLines(ppm.items, 1, 3));
+}
+
+test "Constructing the PPM pixel data" {
+    const c = try canvas(5, 3, &testing.allocator);
+    defer c.deinit();
+
+    const c1 = color(1.5, 0, 0);
+    const c2 = color(0, 0.5, 0);
+    const c3 = color(-0.5, 0, 1);
+    c.write_pixel(0, 0, c1);
+    c.write_pixel(2, 1, c2);
+    c.write_pixel(4, 2, c3);
+    var ppm = ArrayList(u8).init(testing.allocator);
+    defer ppm.deinit();
+
+    try c.to_ppm(ppm.writer());
+    try expectEqualStrings(
+        \\255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        \\0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+        \\0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+    , stringLines(ppm.items, 4, 6));
 }

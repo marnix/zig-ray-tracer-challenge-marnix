@@ -1,5 +1,5 @@
 const types = @import("types.zig");
-const Float = types.Float;
+pub const Float = types.Float;
 
 pub const Color = struct {
     red: Float,
@@ -37,6 +37,15 @@ pub const Color = struct {
             .green = self.green * they.green,
             .blue = self.blue * they.blue,
         };
+    }
+
+    /// Convert the given floating point number 0..1 to an integer in the range 0..max (inclusive!),
+    /// 'cropping' to that interval if necessary.
+    /// Linear (so just multiplies by 'max'), rounds towards nearest integer, .5 rounds up.
+    pub fn asInt(comptime T: type, max: T, f: Float) T {
+        if (f < 0) return 0;
+        if (f > 1) return max;
+        return @intFromFloat(@round(f * @as(Float, @floatFromInt(max))));
     }
 };
 
