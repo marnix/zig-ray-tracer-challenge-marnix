@@ -52,17 +52,27 @@ const expectEqual = testing.expectEqual_;
 const expectEqualStrings = testing.expectEqualStrings;
 const ArrayList = std.ArrayList;
 
-/// Select lines from...to of the given slice, and return only that part (without a trailing newline)
+/// Select lines from...to (inclusive) of the given slice, and return only that part (without a trailing newline)
 fn stringLines(slice: []const u8, from: usize, to: usize) []const u8 {
-    var seenNewlines: usize = 0;
+    std.debug.assert(from <= to);
+    var currentLineNumber: usize = 1;
     var i: ?usize = null;
     var j: usize = 0;
     while (j < slice.len) {
-        if (i == null and seenNewlines + 1 == from) i = j;
-        if (slice[j] == '\n') seenNewlines += 1;
-        if (seenNewlines == to) break;
+        if (i == null and currentLineNumber == from) i = j;
+        if (slice[j] == '\n') currentLineNumber += 1;
+        if (currentLineNumber == to + 1) break;
         j += 1;
+    } else {
+        if (currentLineNumber < to) {
+            std.log.err(
+                "Found only {d} lines, expected at least {d}, in slice <<<\n{s}>>>\n",
+                .{ currentLineNumber, to, slice },
+            );
+            return "NOTHING TO SEE HERE";
+        }
     }
+    std.debug.assert(i != null);
     return slice[i.?..j];
 }
 
