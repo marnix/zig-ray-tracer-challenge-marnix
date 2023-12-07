@@ -32,6 +32,12 @@ const Canvas = struct {
     pub fn write_pixel(self: Canvas, x: usize, y: usize, c: Color) void {
         self._pixels[x + y * self._width] = c;
     }
+
+    pub fn to_ppm(self: Canvas, writer: anytype) !void {
+        _ = try writer.writeAll("P3\n");
+        try writer.print("{d} {d}\n", .{ self._width, self._height });
+        _ = try writer.writeAll("255\n");
+    }
 };
 
 fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
@@ -43,6 +49,22 @@ fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas 
 
 const testing = @import("testing.zig");
 const expectEqual = testing.expectEqual_;
+const expectEqualStrings = testing.expectEqualStrings;
+const ArrayList = std.ArrayList;
+
+/// Select lines from...to of the given slice, and return only that part (without a trailing newline)
+fn stringLines(slice: []const u8, from: usize, to: usize) []const u8 {
+    var seenNewlines: usize = 0;
+    var i: ?usize = null;
+    var j: usize = 0;
+    while (j < slice.len) {
+        if (i == null and seenNewlines + 1 == from) i = j;
+        if (slice[j] == '\n') seenNewlines += 1;
+        if (seenNewlines == to) break;
+        j += 1;
+    }
+    return slice[i.?..j];
+}
 
 test "Creating a canvas" {
     const c = try canvas(10, 20, &testing.allocator);
@@ -62,4 +84,17 @@ test "Writing pixels to a canvas" {
     const red = color(1, 0, 0);
     c.write_pixel(2, 3, red);
     try expectEqual(red, c.pixel_at(2, 3));
+}
+
+test "Constructing the PPM header" {
+    const c = try canvas(5, 3, &testing.allocator);
+    defer c.deinit();
+    var ppm = ArrayList(u8).init(testing.allocator);
+    defer ppm.deinit();
+    try c.to_ppm(ppm.writer());
+    try expectEqualStrings(
+        \\P3
+        \\5 3
+        \\255
+    , stringLines(ppm.items, 1, 3));
 }
