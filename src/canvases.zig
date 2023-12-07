@@ -28,6 +28,10 @@ const Canvas = struct {
     pub fn pixel_at(self: Canvas, x: usize, y: usize) Color {
         return self._pixels[x + y * self._width];
     }
+
+    pub fn write_pixel(self: Canvas, x: usize, y: usize, c: Color) void {
+        self._pixels[x + y * self._width] = c;
+    }
 };
 
 fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
@@ -50,4 +54,12 @@ test "Creating a canvas" {
             try expectEqual(color(0, 0, 0), c.pixel_at(x, y));
         }
     }
+}
+
+test "Writing pixels to a canvas" {
+    const c = try canvas(10, 20, &testing.allocator);
+    defer c.deinit();
+    const red = color(1, 0, 0);
+    c.write_pixel(2, 3, red);
+    try expectEqual(red, c.pixel_at(2, 3));
 }
