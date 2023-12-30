@@ -84,7 +84,7 @@ const Canvas = struct {
     }
 };
 
-fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
+pub fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
     return try Canvas.create(width, height, allocator);
 }
 
