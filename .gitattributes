@@ -1,0 +1,4 @@
+*.zig eol=lf
+*.sh eol=lf
+
+z,zz eol=lf
