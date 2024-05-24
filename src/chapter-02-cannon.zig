@@ -1,6 +1,6 @@
 const std = @import("std");
-pub const std_options = struct {
-    pub const log_level: std.log.Level = .info;
+pub const std_options = std.Options{
+    .log_level = .info,
 };
 
 const tuples = @import("tuples.zig");
