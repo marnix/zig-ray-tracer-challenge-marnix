@@ -11,7 +11,7 @@ const Canvas = struct {
     _allocator: *const mem.Allocator,
 
     pub fn create(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
-        var pixels = try allocator.alloc(Color, height * width);
+        const pixels = try allocator.alloc(Color, height * width);
         @memset(pixels, color(0, 0, 0));
         return Canvas{
             ._pixels = pixels,
