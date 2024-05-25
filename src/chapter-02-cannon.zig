@@ -69,6 +69,6 @@ pub fn main() !void {
 
     std.log.info("ready to write.", .{});
 
-    const ppmFile = try std.fs.cwd().createFile("test.ppm", .{});
+    const ppmFile = try std.fs.cwd().createFile("chapter-02-cannon.ppm", .{});
     try c.to_ppm(ppmFile.writer());
 }
