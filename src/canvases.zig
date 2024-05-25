@@ -33,7 +33,11 @@ const Canvas = struct {
         self._pixels[x + y * self._width] = c;
     }
 
-    pub fn to_ppm(self: Canvas, writer: anytype) !void {
+    pub fn to_ppm(self: Canvas, w: anytype) !void {
+        var buf = std.io.bufferedWriter(w);
+        defer buf.flush() catch {};
+        var writer = buf.writer();
+
         // the format
         _ = try writer.writeAll("P3\n");
         // the size
@@ -80,7 +84,7 @@ const Canvas = struct {
     }
 };
 
-fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
+pub fn canvas(width: usize, height: usize, allocator: *const mem.Allocator) !Canvas {
     return try Canvas.create(width, height, allocator);
 }
 
