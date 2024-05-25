@@ -39,14 +39,14 @@ const Environment = struct {
         std.debug.assert(self.wind.isVector());
         return self;
     }
-};
 
-pub fn tick(env: Environment, proj: Projectile) Projectile {
-    return Projectile.of(.{
-        .position = proj.position.plus(proj.velocity),
-        .velocity = proj.velocity.plus(env.gravity).plus(env.wind),
-    });
-}
+    pub fn tick(self: Environment, proj: Projectile) Projectile {
+        return Projectile.of(.{
+            .position = proj.position.plus(proj.velocity),
+            .velocity = proj.velocity.plus(self.gravity).plus(self.wind),
+        });
+    }
+};
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -63,7 +63,7 @@ pub fn main() !void {
     while (p.position.y() > 0) {
         std.log.debug("distance is {}, height is {}", .{ p.position.x(), p.position.y() });
         c.write_pixel(@intFromFloat(p.position.x()), 550 - @as(usize, @intFromFloat(p.position.y())) - 1, projectileColor);
-        p = tick(e, p);
+        p = e.tick(p);
         t = t + 1;
     }
 
