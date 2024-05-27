@@ -47,3 +47,25 @@ test "Constructing and inspecting a 4x4 matrix" {
     try expectEqF(13.5, matrix.at(3, 0));
     try expectEqF(15.5, matrix.at(3, 2));
 }
+
+test "A 2x2 matrix ought to be representable" {
+    const matrix = Matrix(2, 2).of([2][2]Float{
+        [_]Float{ -3, 5 },
+        [_]Float{ 1, -2 },
+    });
+    try expectEqF(-3, matrix.at(0, 0));
+    try expectEqF(5, matrix.at(0, 1));
+    try expectEqF(1, matrix.at(1, 0));
+    try expectEqF(-2, matrix.at(1, 1));
+}
+
+test "A 3x3 matrix ought to be representable" {
+    const matrix = Matrix(3, 3).of([3][3]Float{
+        [_]Float{ -3, 5, 0 },
+        [_]Float{ 1, -2, -7 },
+        [_]Float{ 0, 1, 1 },
+    });
+    try expectEqF(-3, matrix.at(0, 0));
+    try expectEqF(-2, matrix.at(1, 1));
+    try expectEqF(1, matrix.at(2, 2));
+}
