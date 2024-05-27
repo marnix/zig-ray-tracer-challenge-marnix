@@ -2,4 +2,4 @@
 
 # A shortcut, to build / run all tests during development
 
-zig build install test # KEEP IN SYNC WITH tasks.json
+zig build "$@" install test # KEEP IN SYNC WITH .vscode/tasks.json
