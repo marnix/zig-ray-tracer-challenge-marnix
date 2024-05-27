@@ -22,7 +22,7 @@ pub const Tuple = struct {
     }
 
     pub fn equals(self: Tuple, they: Tuple) bool {
-        return self.x() == they.x() and self.y() == they.y() and self.z() == they.z() and self.w() == they.w();
+        return self.v == they.v;
     }
 
     pub fn isPoint(self: Tuple) bool {
@@ -33,16 +33,16 @@ pub const Tuple = struct {
     }
 
     pub fn plus(self: Tuple, they: Tuple) Tuple {
-        return .{ .v = .{ self.x() + they.x(), self.y() + they.y(), self.z() + they.z(), self.w() + they.w() } };
+        return .{ .v = self.v + they.v };
     }
     pub fn minus(self: Tuple, they: Tuple) Tuple {
-        return self.plus(they.negate());
+        return .{ .v = self.v - they.v };
     }
     pub fn negate(self: Tuple) Tuple {
         return self.times(-1);
     }
     pub fn times(self: Tuple, f: Float) Tuple {
-        return .{ .v = .{ f * self.x(), f * self.y(), f * self.z(), f * self.w() } };
+        return .{ .v = self.v * @as(@TypeOf(self.v), @splat(f)) };
     }
     pub fn div(self: Tuple, f: Float) Tuple {
         return self.times(1 / f);
@@ -71,11 +71,11 @@ pub fn normalize(self: Tuple) Tuple {
 
 pub fn magnitude(self: Tuple) Float {
     std.debug.assert(self.isVector());
-    return sqrt(self.x() * self.x() + self.y() * self.y() + self.z() * self.z() + self.w() * self.w());
+    return sqrt(dot(self, self));
 }
 
 pub fn dot(self: Tuple, they: Tuple) Float {
-    return self.x() * they.x() + self.y() * they.y() + self.z() * they.z() + self.w() * they.w();
+    return @reduce(.Add, self.v * they.v);
 }
 
 pub fn cross(self: Tuple, they: Tuple) Tuple {
