@@ -110,6 +110,5 @@ test "Matrix equality with different matrices" {
         [_]Float{ 8, 7, 6, 5 },
         [_]Float{ 4, 3, 2, 1 },
     });
-    const result = expectEqM(a, b);
-    try expectEqual(error.TestExpectedApproxEqAbs, result);
+    try expectEqual(error.TestExpectedApproxEqAbs, expectEqM(a, b));
 }
