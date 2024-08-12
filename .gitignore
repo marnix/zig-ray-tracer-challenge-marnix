@@ -8,6 +8,8 @@
 # [core]
 #     excludesfile = ~/.gitignore
 
+.zig-cache/
+# the following was used before Zig 0.13.0
 zig-cache/
 zig-out/
 /release/

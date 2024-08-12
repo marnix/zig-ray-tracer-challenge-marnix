@@ -6,7 +6,7 @@ pub fn build(b: *std.Build) void {
 
     {
         const unit_tests = b.addTest(.{
-            .root_source_file = .{ .path = "src/alltests.zig" },
+            .root_source_file = b.path("src/alltests.zig"),
             .target = target,
             .optimize = optimize,
         });
@@ -19,7 +19,7 @@ pub fn build(b: *std.Build) void {
     {
         const exe = b.addExecutable(.{
             .name = "chapter-01-cannon",
-            .root_source_file = .{ .path = "src/chapter-01-cannon.zig" },
+            .root_source_file = b.path("src/chapter-01-cannon.zig"),
             .target = target,
             .optimize = optimize,
         });
@@ -33,7 +33,7 @@ pub fn build(b: *std.Build) void {
     {
         const exe = b.addExecutable(.{
             .name = "chapter-02-cannon",
-            .root_source_file = .{ .path = "src/chapter-02-cannon.zig" },
+            .root_source_file = b.path("src/chapter-02-cannon.zig"),
             .target = target,
             .optimize = optimize,
         });
