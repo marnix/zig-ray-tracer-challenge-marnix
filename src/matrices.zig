@@ -13,7 +13,7 @@ fn Matrix(comptime nrRows: usize, comptime nrColumns: usize) type {
             var result = Self{};
             for (matrix_values, 0..) |row, rowNr| {
                 for (row, 0..) |v, columnNr| {
-                    result.data[rowNr * nrColumns + columnNr] = v;
+                    result.set(rowNr, columnNr, v);
                 }
             }
             return result;
@@ -22,6 +22,11 @@ fn Matrix(comptime nrRows: usize, comptime nrColumns: usize) type {
         /// Get a specific value, indices are zero-based.
         pub fn at(self: Self, rowNr: usize, columnNr: usize) Float {
             return self.data[rowNr * nrColumns + columnNr];
+        }
+
+        /// Set a specific value, indices are zero-based.
+        pub fn set(self: *Self, rowNr: usize, columnNr: usize, value: Float) void {
+            self.data[rowNr * nrColumns + columnNr] = value;
         }
     };
 }
