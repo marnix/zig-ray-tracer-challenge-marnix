@@ -12,7 +12,7 @@ And in this repository I plan to implement it in Zig, to
 - have a side project that I always can make progress on,
 - and experiencing that TDD buzz.
 
-Currently using Zig 0.12.0,
+Currently using Zig 0.13.0,
 and I plan to upgrade to newer Zig stable releases.
 
 I'm not yet sure how closely I will follow the book,
