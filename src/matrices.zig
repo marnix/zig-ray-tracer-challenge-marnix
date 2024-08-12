@@ -2,6 +2,9 @@ const std = @import("std");
 
 const types = @import("types.zig");
 const Float = types.Float;
+const tuples = @import("tuples.zig");
+const tuple = tuples.tuple;
+const Tuple = tuples.Tuple;
 
 fn Matrix(comptime nrRows: usize, comptime nrColumns: usize) type {
     return struct {
@@ -13,7 +16,7 @@ fn Matrix(comptime nrRows: usize, comptime nrColumns: usize) type {
             var result = Self{};
             for (matrix_values, 0..) |row, rowNr| {
                 for (row, 0..) |v, columnNr| {
-                    result.data[rowNr * nrColumns + columnNr] = v;
+                    result.set(rowNr, columnNr, v);
                 }
             }
             return result;
@@ -22,6 +25,42 @@ fn Matrix(comptime nrRows: usize, comptime nrColumns: usize) type {
         /// Get a specific value, indices are zero-based.
         pub fn at(self: Self, rowNr: usize, columnNr: usize) Float {
             return self.data[rowNr * nrColumns + columnNr];
+        }
+
+        /// Set a specific value, indices are zero-based.
+        pub fn set(self: *Self, rowNr: usize, columnNr: usize, value: Float) void {
+            self.data[rowNr * nrColumns + columnNr] = value;
+        }
+
+        /// Limitation: Currently only allows multiplying square matrices,
+        /// and matrices and tuples (= vectors of length 4)...
+        pub fn times(self: Self, they: anytype) @TypeOf(they) {
+            // Later: See if the implementation can be sped up using @Vector inner products?
+            if (@TypeOf(they) == Self) {
+                var result = Self{};
+                for (0..nrColumns) |columnNr| {
+                    for (0..nrRows) |rowNr| {
+                        var sum: Float = 0;
+                        for (0..nrColumns) |i| {
+                            sum += self.at(rowNr, i) * they.at(i, columnNr);
+                        }
+                        result.set(rowNr, columnNr, sum);
+                    }
+                }
+                return result;
+            } else if (nrColumns == 4 and @TypeOf(they) == Tuple) {
+                var result: @Vector(4, Float) = undefined;
+                for (0..nrRows) |rowNr| {
+                    var sum: Float = 0;
+                    for (0..nrColumns) |i| {
+                        sum += self.at(rowNr, i) * they.at(i);
+                    }
+                    result[rowNr] = sum;
+                }
+                return tuple(result[0], result[1], result[2], result[3]);
+            } else {
+                @compileError("matrix multiplication support is quite limited...");
+            }
         }
     };
 }
@@ -33,6 +72,7 @@ const testing = @import("testing.zig");
 const expect = testing.expect;
 const expectEqF = testing.expectEqF;
 const expectEqual = testing.expectEqual_;
+const expectEqT = tuples.expectEqT;
 
 fn vectorLen(v: anytype) usize {
     return @typeInfo(@TypeOf(v)).Vector.len; // just v.len might work in the future...
@@ -111,4 +151,36 @@ test "Matrix equality with different matrices" {
         [_]Float{ 4, 3, 2, 1 },
     });
     try expectEqual(error.TestExpectedApproxEqAbs, expectEqM(a, b));
+}
+
+test "Multiplying two matrices" {
+    const a = Matrix(4, 4).of([4][4]Float{
+        [_]Float{ 1, 2, 3, 4 },
+        [_]Float{ 5, 6, 7, 8 },
+        [_]Float{ 9, 8, 7, 6 },
+        [_]Float{ 5, 4, 3, 2 },
+    });
+    const b = Matrix(4, 4).of([4][4]Float{
+        [_]Float{ -2, 1, 2, 3 },
+        [_]Float{ 3, 2, 1, -1 },
+        [_]Float{ 4, 3, 6, 5 },
+        [_]Float{ 1, 2, 7, 8 },
+    });
+    try expectEqM(Matrix(4, 4).of([4][4]Float{
+        [_]Float{ 20, 22, 50, 48 },
+        [_]Float{ 44, 54, 114, 108 },
+        [_]Float{ 40, 58, 110, 102 },
+        [_]Float{ 16, 26, 46, 42 },
+    }), a.times(b));
+}
+
+test "A matrix multiplied by a tuple" {
+    const a = Matrix(4, 4).of([4][4]Float{
+        [_]Float{ 1, 2, 3, 4 },
+        [_]Float{ 2, 4, 4, 2 },
+        [_]Float{ 8, 6, 4, 1 },
+        [_]Float{ 0, 0, 0, 1 },
+    });
+    const b = tuple(1, 2, 3, 1);
+    try expectEqT(tuple(18, 24, 33, 1), a.times(b));
 }

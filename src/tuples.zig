@@ -8,6 +8,10 @@ const sqrt = types.sqrt;
 pub const Tuple = struct {
     v: @Vector(4, Float),
 
+    pub fn at(self: Tuple, rowNr: usize) Float {
+        return self.v[rowNr];
+    }
+
     pub fn x(self: Tuple) Float {
         return self.v[0];
     }
@@ -93,7 +97,7 @@ const testing = @import("testing.zig");
 const expect = testing.expect;
 const expectEqF = testing.expectEqF;
 
-fn expectEqT(expected: Tuple, actual: Tuple) !void {
+pub fn expectEqT(expected: Tuple, actual: Tuple) !void {
     try expectEqF(expected.x(), actual.x());
     try expectEqF(expected.y(), actual.y());
     try expectEqF(expected.z(), actual.z());
