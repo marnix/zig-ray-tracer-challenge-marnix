@@ -36,7 +36,7 @@ fn Matrix(comptime nrRows: usize, comptime nrColumns: usize) type {
             for (0..nrColumns) |columnNr| {
                 for (0..nrRows) |rowNr| {
                     var sum: Float = 0;
-                    for (0..nrRows) |i| {
+                    for (0..nrColumns) |i| {
                         sum += self.at(rowNr, i) * they.at(i, columnNr);
                     }
                     result.set(rowNr, columnNr, sum);
