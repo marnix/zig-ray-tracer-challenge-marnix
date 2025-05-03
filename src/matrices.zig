@@ -75,7 +75,7 @@ const expectEqual = testing.expectEqual_;
 const expectEqT = tuples.expectEqT;
 
 fn vectorLen(v: anytype) usize {
-    return @typeInfo(@TypeOf(v)).Vector.len; // just v.len might work in the future...
+    return @typeInfo(@TypeOf(v)).vector.len; // just v.len might work in the future...
 }
 
 fn expectEqM(expected: anytype, actual: anytype) !void {
